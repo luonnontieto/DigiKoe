@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <title>DigiKoe</title>
+ <!-- Bootstrap CSS -->
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  
+ <!-- Summernote CSS -->
+ <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet" />
+</head>
+  <style>
+    body {
+      font-family: "Georgia", serif;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+      position: relative;
+      font-size: 1em;
+      color: #000;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .logo {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      max-height: 80px;
+      border: 1px solid black;
+      padding: 2px;
+      background-color: white;
+    }
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: 600;
+      font-size: 1.1em;
+    }
+    .required::after {
+      content: " *";
+      color: red;
+    }
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      font-size: 1em;
+      box-sizing: border-box;
+      color: #000;
+      font-family: inherit;
+      background: white url('data:image/svg+xml;utf8,<svg fill="gray" height="14" viewBox="0 0 24 24" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 12px center;
+      background-size: 14px;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      cursor: pointer;
+    }
+    #teksti {
+      width: 100%;
+      min-height: 400px;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      font-size: 12px;
+      box-sizing: border-box;
+      color: #000;
+      background-color: white;
+      overflow-y: auto;
+      outline: none;
+      white-space: pre-wrap;
+      font-family: inherit;
+    }
+    button[type="submit"] {
+      margin-top: 25px;
+      padding: 12px 20px;
+      font-size: 1.1em;
+      font-weight: bold;
+      color: white;
+      background-color: #28a745;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button[type="submit"]:hover {
+      background-color: #218838;
+    }
+    .word-count {
+      font-size: 0.9em;
+      color: #555;
+      margin-top: 5px;
+    }
+    .vahvistus {
+      margin-top: 10px;
+      color: green;
+      font-weight: bold;
+      text-align: center;
+    }
+    .toolbar {
+      position: absolute;
+      left: calc(20px - 189px);
+      top: calc(340px + 378px - 130px);
+      width: 120px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(4, auto);
+      gap: 10px;
+      align-items: center;
+      font-family: inherit;
+    }
+    #boldBtn {
+      grid-column: 1;
+      grid-row: 1;
+      font-weight: bold;
+    }
+    #italicBtn {
+      grid-column: 2;
+      grid-row: 1;
+      font-style: italic;
+    }
+    .quote-btn:nth-child(3) {
+      grid-column: 1;
+      grid-row: 2;
+      font-size: 1.5em;
+    }
+    .quote-btn:nth-child(4) {
+      grid-column: 2;
+      grid-row: 2;
+      font-size: 1.5em;
+    }
+    .quote-btn:nth-child(5) {
+      grid-column: 1;
+      grid-row: 3;
+      font-size: 1.5em;
+    }
+    .quote-btn:nth-child(6) {
+      grid-column: 2;
+      grid-row: 3;
+      font-size: 1.5em;
+    }
+    .toolbar .dropdown {
+      grid-column: 1 / span 2;
+      grid-row: 4;
+      justify-self: center;
+      width: 80%;
+    }
+    .toolbar button {
+      padding: 8px 0;
+      font-size: 1.2em;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-align: center;
+      user-select: none;
+      font-family: inherit;
+    }
+    .toolbar button.active {
+      background-color: #007bff;
+      color: white;
+    }
+    .quote-btn {
+      font-size: 1.8em;
+      line-height: 1em;
+      font-weight: normal;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      user-select: none;
+    }
+    .quote-btn:hover {
+      background-color: #eee;
+    }
+    .dropdown {
+      position: relative;
+      display: inline-block;
+      font-family: inherit;
+      width: 100%;
+    }
+    .dropdown select {
+      width: 100%;
+      padding: 8px 32px 8px 8px;
+      font-size: 1.1em;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      font-family: inherit;
+      appearance: none;
+      background-color: #fff;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="gray" height="14" viewBox="0 0 24 24" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 14px;
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+
+  <img src="https://i.postimg.cc/pr32Nvx6/20250707-1658-White-Background-Lock-remix-01jzjjvdyee2h9pdxzv8cc6ajw.png" alt="DigiKoe Logo" class="logo" />
+  <h1>DigiKoe</h1>
+
+  <form id="tehtavaForm">
+    <label class="required">Etunimi</label>
+    <input type="text" id="etunimi" name="etunimi" required />
+
+    <label class="required">Sukunimi</label>
+    <input type="text" id="sukunimi" name="sukunimi" required />
+
+    <label class="required">Valitse luokka</label>
+    <select id="luokka" name="luokka" required>
+      <option value="" disabled selected hidden>-- Valitse luokka --</option>
+      <optgroup label="7lk.">
+        <option>7A</option><option>7B</option><option>7C</option><option>7D</option><option>7E</option><option>7F</option>
+      </optgroup>
+      <optgroup label="8lk.">
+        <option>8A</option><option>8B</option><option>8C</option><option>8D</option><option>8E</option><option>8F</option>
+      </optgroup>
+      <optgroup label="9lk.">
+        <option>9A</option><option>9B</option><option>9C</option><option>9D</option><option>9E</option><option>9F</option>
+      </optgroup>
+    </select>
+
+    <label class="required">Valitse opettaja</label>
+    <select id="opettaja" name="opettaja" required>
+      <option value="" disabled selected hidden>-- Valitse opettaja --</option>
+      <option value="MAL">MAL</option>
+      <option value="LKL">LKL</option>
+      <option value="JNU">JNU</option>
+      <option value="KPI">KPI</option>
+    </select>
+
+    <label class="required">Tehtävän vastaus</label>
+    <!-- Write your comments here 
+    <div id="teksti" contenteditable="true" aria-label="Tehtävän vastaus"></div>
+    -->
+    <div id="summernote"></div>
+    <div class="word-count" id="wordCount">Sanamäärä: 0</div>
+
+    <button type="submit">Lähetä</button>
+  </form>
+
+  <div class="vahvistus" id="vahvistusViesti" style="display:none;">
+    Tehtävä on lähetetty onnistuneesti opettajalle!
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Summernote JS -->
+  <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js"></script>
+
+  <script>
+    // Manual Finnish translations for Summernote UI
+    $.extend(true, $.summernote.lang, {
+      'fi-FI': {
+        font: {
+          bold: 'Lihavointi',
+          italic: 'Kursivointi',
+          underline: 'Alleviivaus',
+          clear: 'Poista muotoilu',
+          height: 'Riviväli',
+          name: 'Fontti',
+          strikethrough: 'Yliviivaus',
+          subscript: 'Alaindeksi',
+          superscript: 'Yläindeksi',
+          size: 'Fontin koko'
+        },
+        image: {
+          image: 'Kuva',
+          insert: 'Lisää kuva',
+          resizeFull: 'Koko koko',
+          resizeHalf: 'Puoli koko',
+          resizeQuarter: 'Neljäsosa koko',
+          floatLeft: 'Tasaa vasemmalle',
+          floatRight: 'Tasaa oikealle',
+          floatNone: 'Ei tasausta',
+          shapeRounded: 'Pyöristetty',
+          shapeCircle: 'Ympyrä',
+          shapeThumbnail: 'Pikkukuva',
+          shapeNone: 'Ei muotoa',
+          dragImageHere: 'Raahaa kuva tähän',
+          dropImage: 'Pudota kuva tai teksti tähän',
+          selectFromFiles: 'Valitse tiedostoista',
+          maximumFileSize: 'Tiedoston enimmäiskoko',
+          maximumFileSizeError: 'Tiedosto on liian suuri.',
+          url: 'Kuvan URL',
+          remove: 'Poista kuva',
+          original: 'Alkuperäinen'
+        },
+        link: {
+          link: 'Linkki',
+          insert: 'Lisää linkki',
+          unlink: 'Poista linkki',
+          edit: 'Muokkaa',
+          textToDisplay: 'Näytettävä teksti',
+          url: 'Linkin URL',
+          openInNewWindow: 'Avaa uuteen ikkunaan'
+        },
+        video: {
+          video: 'Video',
+          videoLink: 'Videolinkki',
+          insert: 'Lisää video',
+          url: 'Videon URL',
+          providers: '(YouTube, Vimeo, Vine, Instagram, DailyMotion tai Youku)'
+        },
+        table: {
+          table: 'Taulukko',
+          addRowAbove: 'Lisää rivi yläpuolelle',
+          addRowBelow: 'Lisää rivi alapuolelle',
+          addColLeft: 'Lisää sarake vasemmalle',
+          addColRight: 'Lisää sarake oikealle',
+          delRow: 'Poista rivi',
+          delCol: 'Poista sarake',
+          delTable: 'Poista taulukko'
+        },
+        hr: {
+          insert: 'Lisää vaakaviiva'
+        },
+        style: {
+          style: 'Tyyli',
+          p: 'Normaali',
+          blockquote: 'Lainaus',
+          pre: 'Koodi',
+          h1: 'Otsikko 1',
+          h2: 'Otsikko 2',
+          h3: 'Otsikko 3',
+          h4: 'Otsikko 4',
+          h5: 'Otsikko 5',
+          h6: 'Otsikko 6'
+        },
+        lists: {
+          unordered: 'Luettelomerkit',
+          ordered: 'Numeroitu lista'
+        },
+        options: {
+          help: 'Ohje',
+          fullscreen: 'Koko näyttö',
+          codeview: 'Näytä koodi'
+        },
+        paragraph: {
+          paragraph: 'Kappale',
+          outdent: 'Pienennä sisennystä',
+          indent: 'Suurenna sisennystä',
+          left: 'Tasaa vasemmalle',
+          center: 'Keskitä',
+          right: 'Tasaa oikealle',
+          justify: 'Tasaa molemmat reunat'
+        },
+        color: {
+          recent: 'Viimeisin väri',
+          more: 'Lisää värejä',
+          background: 'Taustaväri',
+          foreground: 'Tekstin väri',
+          transparent: 'Läpinäkyvä',
+          setTransparent: 'Aseta läpinäkyväksi',
+          reset: 'Nollaa',
+          resetToDefault: 'Palauta oletus'
+        },
+        shortcut: {
+          shortcuts: 'Pikanäppäimet',
+          close: 'Sulje',
+          textFormatting: 'Tekstin muotoilu',
+          action: 'Toiminto',
+          paragraphFormatting: 'Kappaleen muotoilu',
+          documentStyle: 'Dokumentin tyyli',
+          extraKeys: 'Lisänäppäimet'
+        },
+        history: {
+          undo: 'Kumoa',
+          redo: 'Tee uudelleen'
+        }
+      }
+    });
+
+    // Initialize Summernote with Finnish language
+    $('#summernote').summernote({
+  lang: 'fi-FI',
+  placeholder: 'Kirjoita jotain mahtavaa...',
+  tabsize: 2,
+  styleWithSpan: true,
+  fontSizes: ['8', '10', '12', '14', '16', '18', '20', '24', '28', '30', '36', '48'],
+  height: 500,
+  toolbar: [
+    ['style', ['bold', 'italic', 'underline', 'clear']],
+    ['font', ['strikethrough', 'superscript', 'subscript']],
+    ['fontsize', ['fontsize']],
+    ['color', ['color']],
+    ['para', ['ul', 'ol', 'paragraph']],
+    ['insert', ['link']], // 👈 No 'picture'
+  ],
+  height: 500,
+  styleTags: [
+    'p', 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
+  ],
+  styleWithSpan: true,
+  callbacks: {
+    onImageUpload: function(files) {
+      alert("Kuvien lisääminen ei ole sallittua.");
+      return false;
+    },
+    onPaste: function(e) {
+      const clipboardData = e.originalEvent.clipboardData;
+      if (clipboardData && clipboardData.items) {
+        for (let i = 0; i < clipboardData.items.length; i++) {
+          if (clipboardData.items[i].type.indexOf("image") !== -1) {
+            e.preventDefault();
+            alert("Kuvien liittäminen ei ole sallittua.");
+            return false;
+          }
+        }
+      }
+    },
+    onDrop: function(e) {
+      e.preventDefault();
+      alert("Kuvien pudottaminen ei ole sallittua.");
+    }
+  }
+});
+
+    $('#summernote').on('summernote.keydown', function(we, e) {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        // Här kan du lägga till annat beteende vid tab om du vill
+      }
+    });
+  </script>
+  <script>
+    function updateWordCount() {
+      const content = $('#summernote').summernote('code')
+        .replace(/<\/?[^>]+(>|$)/g, "") // Strip HTML tags
+        .trim();
+
+      const words = content.length > 0 ? content.split(/\s+/).filter(Boolean) : [];
+      const count = words.length;
+
+      $('#wordCount').text('Sanamäärä: ' + count);
+    }
+
+    // Update word count on content change
+    $('#summernote').on('summernote.keyup summernote.change', updateWordCount);
+
+    // Also update on paste
+    $('#summernote').on('summernote.paste', function() {
+      setTimeout(updateWordCount, 100); // Wait a bit for paste to complete
+    });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const teacherEmails = {
+        MAL: "mathias.altinisik@outlook.com",
+        LKL: "lkl@example.com",
+        JNU: "jnu@example.com",
+        KPI: "kpi@example.com",
+      };
+
+      const teksti = document.getElementById("teksti");
+      const wordCountDiv = document.getElementById("wordCount");
+      const vahvistus = document.getElementById("vahvistusViesti");
+      const boldBtn = document.getElementById("boldBtn");
+      const italicBtn = document.getElementById("italicBtn");
+      const fontSizeSelect = document.getElementById("fontSizeSelect");
+
+      const STANDARD_SIZE = 15;
+      const OTSIKKO_SIZE = 30;
+      const ALAOTSIKKO_SIZE = 20;
+
+      let currentFontSize = STANDARD_SIZE;
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          const content = $('#summernote').summernote('code').trim();
+          // Summernote wraps empty content as "<p><br></p>", so check for that too
+          if (content !== '' && content !== '<p><br></p>') {
+            $('#summernote').summernote('code', '');
+            alert("Vastauksesi on tyhjennetty, koska poistuit sivulta.");
+          }
+        }
+      });
+
+      document.getElementById("tehtavaForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        let etunimi = document.getElementById("etunimi").value.trim();
+        let sukunimi = document.getElementById("sukunimi").value.trim();
+        let luokka = document.getElementById("luokka").value;
+        let opettaja = document.getElementById("opettaja").value;
+
+        if (!etunimi || !sukunimi || !luokka || !opettaja) {
+          alert("Täytä kaikki vaaditut kentät.");
+          return;
+        }
+
+        let email = teacherEmails[opettaja];
+        if (!email) {
+          alert("Tuntematon opettaja valittu.");
+          return;
+        }
+
+        document.getElementById("vahvistusViesti").style.display = "block";
+
+        document.querySelectorAll("#tehtavaForm input").forEach(input => input.value = '');
+        document.querySelectorAll("#tehtavaForm select").forEach(select => select.selectedIndex = 0);
+
+        $('#summernote').summernote('code', '');
+
+     });
+
+    });
+  </script>
+  <script>
+    document.addEventListener("keydown", function(e) {
+      if ((e.ctrlKey || e.metaKey) && ['v', 'c', 'x'].includes(e.key.toLowerCase())) {
+        e.preventDefault();
+        alert("Toiminto ei ole sallittu."); // Meddelande till användaren
+      }
+    });
+  </script>
+</body>
+</html>
